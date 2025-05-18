@@ -12,8 +12,7 @@ def on_ui_tabs():
 
         status_text = gr.Textbox(label="ステータス", interactive=False)
         generate_button = gr.Button("生成する")
-        generated_text = gr.Textbox(label="生成されたテキスト", interactive=False, lines=10, elem_id="generated_text")
-        copy_button = gr.Button("テキストをコピー", elem_id="copy_btn")
+        generated_text = gr.Textbox(label="生成されたテキスト-表示されている部分をクリックし、Ctrl+Aで全てを選択し、Ctrl+Cでコピー", interactive=False, lines=10, elem_id="generated_text")
         download_file = gr.File(label="テキストをダウンロード", interactive=False)
 
         def update_visibility(count):
@@ -59,22 +58,6 @@ def on_ui_tabs():
             outputs=[generated_text, status_text, download_file]
         )
 
-        # コピー用カスタムJSを仕込む
-        ui_component.load(
-            None,  # py関数無し
-            js="""
-                // クリックでテキストをコピー
-                document.getElementById('copy_btn').onclick = function() {
-                    var text = document.querySelector('#generated_text textarea')?.value || '';
-                    if (text) {
-                        navigator.clipboard.writeText(text);
-                        alert('テキストをコピーしました！');
-                    } else {
-                        alert('コピーするテキストがありません');
-                    }
-                }
-            """
-        )
 
         return [(ui_component, "Prompts from File Generator", "prompts_generator_tab")]
 
